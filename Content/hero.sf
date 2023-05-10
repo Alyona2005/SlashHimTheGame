@@ -1,0 +1,69 @@
+{
+  "textureAtlas": {
+    "texture": "..\\..\\Downloads\\m_7.png",
+    "regionWidth": 400,
+    "regionHeight": 200
+  },
+  "cycles": {
+    "idlel": {
+      "frames": [48,49,50,51,52,53,54,55],
+      "isLooping": true,
+      "frameDuration": 0.07
+    },
+    "runl": {
+      "frames": [56,57,58,59,60,61,62,63],
+      "isLooping": false,
+      "frameDuration": 0.07
+    },
+    "attackl": {
+      "frames": [66,67,68,69,70,71],
+      "isLooping": false,
+      "frameDuration": 0.07
+    },
+    "damagel": {
+      "frames": [76,77,78,79],
+      "isLooping": false,
+      "frameDuration": 0.07
+    },
+    "jumpl": {
+      "frames": [86,87],
+      "isLooping": true,
+      "frameDuration": 0.07
+    },
+    "falll": {
+      "frames": [94,95],
+      "isLooping": true,
+      "frameDuration": 0.07
+    },
+    "idler": {
+      "frames": [0,1,2,3,4,5,6,7],
+      "isLooping": true,
+      "frameDuration": 0.07
+    },
+    "runr": {
+      "frames": [8,9,10,11,12,13,14,15],
+      "isLooping": false,
+      "frameDuration": 0.07
+    },
+    "attackr": {
+      "frames": [16,17,18,19,20,21],
+      "isLooping": false,
+      "frameDuration": 0.07
+    },
+    "dmager": {
+      "frames": [24,25,26,27],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "jumpr": {
+      "frames": [32,33],
+      "isLooping": true,
+      "frameDuration": 0.07
+    },
+    "fallr": {
+      "frames": [40,41],
+      "isLooping": true,
+      "frameDuration": 0.07
+    }
+  }
+}
