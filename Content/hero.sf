@@ -50,7 +50,7 @@
       "isLooping": false,
       "frameDuration": 0.07
     },
-    "dmager": {
+    "damager": {
       "frames": [24,25,26,27],
       "isLooping": false,
       "frameDuration": 0.2

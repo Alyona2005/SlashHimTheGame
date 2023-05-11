@@ -37,18 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:8Sky.png
 
-#begin GameGate_-_Explosion_(Gybka.com).mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:GameGate_-_Explosion_(Gybka.com).mp3;backaudio.mp3
-
-#begin katana.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:katana.mp3
-
 #begin m_7.png
 /importer:TextureImporter
 /processor:TextureProcessor

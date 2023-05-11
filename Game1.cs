@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
-using MonoGame.Extended;
-using Microsoft.Xna.Framework.Media;
 
 namespace SlashThemTheGame
 {
@@ -14,15 +12,9 @@ namespace SlashThemTheGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private AnimatedSprite _heroSprite;
+        private Hero hero = new Hero();
 
-        private Vector2 _heroPosition;
-
-        private Texture2D _background;
-
-        private Texture2D _ground;
-
-        private Rectangle _groundPosition = new Rectangle(0, 0, 1920, 1080);
+        private Map map = new Map();
 
         public Game1()
         {
@@ -40,6 +32,11 @@ namespace SlashThemTheGame
         {
             // TODO: Add your initialization logic here
 
+            hero.HeroPosition = new Vector2(600, 835);
+
+            map.GroundPosition = new Rectangle(0, 0, 1920, 1080);
+            map.backgroundPosition = new Rectangle(0, 0, 1920, 1080);
+
             base.Initialize();
         }
 
@@ -49,71 +46,22 @@ namespace SlashThemTheGame
 
             // TODO: use this.Content to load your game content here
 
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            var heroSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hero.sf", new JsonContentLoader()));
 
-            _background = Content.Load<Texture2D>("8Sky");
+            heroSprite.Play("idler");
+            
+            hero.HeroSprite = heroSprite;
 
-            _ground = Content.Load<Texture2D>("1Tiles");
-
-            //var spriteSheet = 
-
-            var sprite = new AnimatedSprite(Content.Load<SpriteSheet>("hero.sf", new JsonContentLoader()));
-
-            sprite.Play("idler");
-            _heroPosition = new Vector2(600, 841);
-            _heroSprite = sprite;
+            map.Background = Content.Load<Texture2D>("8Sky");
+            map.Ground = Content.Load<Texture2D>("1Tiles");
         }
 
         protected override void Update(GameTime gameTime)
-        { 
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+        {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            var walkSpeed = deltaSeconds * 128;
-            var keyboardState = Keyboard.GetState();
-            var mouseState = Mouse.GetState();
-            var animation = "idler";
-
-            if ((keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) && animation == "idler")
-            {
-                animation = "jumpr";
-                _heroPosition.Y -= 500 * dt;
-            }
-
-            if ((keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up)) && animation == "idlel")
-            {
-                animation = "jumpl";
-                _heroPosition.Y -= 500 * dt;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
-            {
-                animation = "runl";
-                _heroPosition.X -= walkSpeed;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
-            {
-                animation = "runr";
-                _heroPosition.X += walkSpeed;
-            }
-
-            if (mouseState.LeftButton == ButtonState.Pressed && animation == "idler")
-            {
-                animation = "attackr";
-            }
-
-            if (mouseState.LeftButton == ButtonState.Pressed && animation == "idlel")
-            {
-                animation = "attackl";
-            }
-
-            _heroSprite.Play(animation);
-
-            _heroSprite.Update(deltaSeconds);
+            hero.Move(gameTime);
 
             base.Update(gameTime);
         }
@@ -126,11 +74,11 @@ namespace SlashThemTheGame
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            _spriteBatch.Draw(_background, new Rectangle(0, 0, 1920, 1080), Color.White);
+            _spriteBatch.Draw(map.Background, map.backgroundPosition, Color.White);
 
-            _spriteBatch.Draw(_ground, _groundPosition, Color.White);
+            _spriteBatch.Draw(map.Ground, map.GroundPosition, Color.White);
 
-            _spriteBatch.Draw(_heroSprite, _heroPosition);
+            _spriteBatch.Draw(hero.HeroSprite, hero.HeroPosition);
 
             _spriteBatch.End();
 
