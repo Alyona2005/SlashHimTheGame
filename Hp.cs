@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Sprites;
-using System.Reflection.Metadata.Ecma335;
 
 namespace SlashThemTheGame
 {

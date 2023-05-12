@@ -13,6 +13,7 @@ namespace SlashThemTheGame
         private SpriteBatch _spriteBatch;
 
         private Hero hero;
+        private Enemy enemy;
         private Map map;
         private static Hp[] heroHp;
 
@@ -42,6 +43,9 @@ namespace SlashThemTheGame
             hero = new Hero(heroHp);
             hero.HeroPosition = new Vector2(600, 830);
 
+            enemy = new Enemy();
+            enemy.EnemyPosition = new Vector2(1000, 830);
+
             map = new Map();
             map.BackgroundPosition = new Rectangle(0, 0, 1920, 1080);
             map.GroundPosition = new Rectangle(0, 0, 1920, 1080);
@@ -61,6 +65,9 @@ namespace SlashThemTheGame
             hero.HeroSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hero.sf", new JsonContentLoader()));
             hero.HeroSprite.Play("idler");
 
+            enemy.EnemySprite = new AnimatedSprite(Content.Load<SpriteSheet>("enemy.sf", new JsonContentLoader()));
+            enemy.EnemySprite.Play("idle");
+
             for (int i = 0; i < heroHp.Length; i++)
             {
                 heroHp[i].HpSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));
@@ -71,8 +78,6 @@ namespace SlashThemTheGame
             map.Ground = Content.Load<Texture2D>("1Tiles");
             map.Forest = Content.Load<Texture2D>("Forest");
             map.BackBushes = Content.Load<Texture2D>("BackBushes");
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -81,6 +86,8 @@ namespace SlashThemTheGame
                 Exit();
 
             hero.ToControl(gameTime);
+
+            enemy.Roam(gameTime);
 
             for (int i = 0; i < heroHp.Length; i++)
             {
@@ -109,8 +116,13 @@ namespace SlashThemTheGame
                 _spriteBatch.Draw(heroHp[i].HpSprite, heroHp[i].HpPosition);
             }
 
+            //Отрисовка врага
+            _spriteBatch.Draw(enemy.EnemySprite, enemy.EnemyPosition);
+
             //Отрисовка спрайта игрока
             _spriteBatch.Draw(hero.HeroSprite, hero.HeroPosition);
+
+            //Отрисовка аватара персонажа
             _spriteBatch.Draw(hero.Avatar, new Vector2(0, 0), Color.White);
 
             _spriteBatch.End();
