@@ -6,8 +6,12 @@ namespace SlashThemTheGame
     public class Map
     {
         public Texture2D Background { get; set; }
-        public Rectangle backgroundPosition { get; set; }
+        public Rectangle BackgroundPosition { get; set; }
+
         public Texture2D Ground { get; set; }
         public Rectangle GroundPosition { get; set; }
+
+        public Texture2D Forest { get; set; }
+        public Rectangle ForestPosition { get; set;}
     }
 }

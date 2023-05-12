@@ -6,55 +6,36 @@ namespace SlashThemTheGame
 {
     public class Hero
     {
+        public Hero(Hp[] amountOfHp)
+        {
+            _hp = amountOfHp;
+        }
+
+        private Hp[] _hp;
+
+        public Hp[] Hp { get { return _hp; } private set { _hp = value; } }
+
         private Vector2 _heroPosition;
         public Vector2 HeroPosition { get { return _heroPosition; } set { _heroPosition = value; } }
+
         private AnimatedSprite _heroSprite;
         public AnimatedSprite HeroSprite { get { return _heroSprite; } set { _heroSprite = value; } }
 
         private bool leftCheck = false;
-        private byte checkMove = 0;
-        public void Move(GameTime gameTime)
+        private byte checkAction = 0;
+
+        //Логика управления игроком
+        public void ToControl(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             var walkSpeed = deltaSeconds * 600;
+
             var keyboardState = Keyboard.GetState();
             var mouseState = Mouse.GetState();
+
             var animation = "idler";
-
-            if (_heroPosition.Y < 835 && (keyboardState.IsKeyUp(Keys.W)))
-            {
-                if (leftCheck == true)
-                {
-                    animation = "falll";
-                    _heroPosition.Y += 700 * dt;
-                }
-
-                else
-                {
-                    animation = "fallr";
-                    _heroPosition.Y += 700 * dt;
-                }
-            }
-
-            if (keyboardState.IsKeyDown(Keys.W) && leftCheck == true)
-            {
-                animation = "jumpl";
-
-                _heroPosition.Y -= 500 * dt;
-
-                leftCheck = true;
-
-                checkMove = 1;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.W) && leftCheck == false)
-            {
-                animation = "jumpr";
-                _heroPosition.Y -= 500 * dt;
-
-                leftCheck = false;
-            }
 
             if (keyboardState.IsKeyDown(Keys.A))
             {
@@ -62,12 +43,30 @@ namespace SlashThemTheGame
                 _heroPosition.X -= walkSpeed;
 
                 leftCheck = true;
-                checkMove = 2;
+                checkAction = 2;
             }
 
             if (keyboardState.IsKeyDown(Keys.D))
             {
                 animation = "runr";
+                _heroPosition.X += walkSpeed;
+
+                leftCheck = false;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.A) && keyboardState.IsKeyDown(Keys.W))
+            {
+                animation = "jumpl";
+                _heroPosition.X -= walkSpeed;
+
+                leftCheck = true;
+
+                checkAction = 5;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.D) && keyboardState.IsKeyDown(Keys.W))
+            {
+                animation = "jumpr";
                 _heroPosition.X += walkSpeed;
 
                 leftCheck = false;
@@ -86,47 +85,92 @@ namespace SlashThemTheGame
 
                 leftCheck = true;
 
-                checkMove = 3;
+                checkAction = 3;
+            }
 
+            if (_heroPosition.Y > 600)
+            {
+                if (keyboardState.IsKeyDown(Keys.W))
+                {
+                    if (leftCheck == true)
+                    {
+                        animation = "jumpl";
+
+                        _heroPosition.Y -= 1000 * dt;
+
+                        leftCheck = true;
+
+                        checkAction = 1;
+                    }
+
+                    else
+                    {
+                        animation = "jumpr";
+                        _heroPosition.Y -= 1000 * dt;
+
+                        leftCheck = false;
+                    }
+                }
+            }
+
+            if (_heroPosition.Y < 830 && keyboardState.IsKeyUp(Keys.W))
+            {
+                if (leftCheck == true)
+                {
+                    animation = "falll";
+                    _heroPosition.Y += 860 * dt;
+
+                    checkAction = 4;
+                }
+
+                else
+                {
+                    animation = "fallr";
+                    _heroPosition.Y += 860 * dt;
+                }
             }
 
             if (leftCheck)
             {
-                switch (checkMove)
+                switch (checkAction)
                 {
                     case 0:
 
                         animation = "idlel";
-
                         break;
 
                     case 1:
 
                         animation = "jumpl";
-
-                        checkMove = 0;
+                        checkAction = 0;
 
                         break;
 
                     case 2:
 
                         animation = "runl";
-
-                        checkMove = 0;
+                        checkAction = 0;
 
                         break;
 
                     case 3:
 
                         animation = "attackl";
-
-                        checkMove = 0;
+                        checkAction = 0;
 
                         break;
 
-                    default:
+                    case 4:
 
-                        animation = "idlel";
+                        animation = "falll";
+                        checkAction = 0;
+
+                        break;
+
+                    case 5:
+
+                        animation = "jumpl";
+                        checkAction = 0;
 
                         break;
                 }

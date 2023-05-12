@@ -1,6 +1,6 @@
 {
   "textureAtlas": {
-    "texture": "..\\..\\Downloads\\m_7.png",
+    "texture": "m_7.png",
     "regionWidth": 400,
     "regionHeight": 200
   },

@@ -1,0 +1,19 @@
+{
+  "textureAtlas": {
+    "texture": "hp.png",
+    "regionWidth": 100,
+    "regionHeight": 100
+  },
+  "cycles": {
+    "idle": {
+      "frames": [131],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "remove": {
+      "frames": [131,132,133,134,135,136,137,138],
+      "isLooping": false,
+      "frameDuration": 0.07
+    }
+  }
+}
