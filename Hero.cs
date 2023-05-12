@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Sprites;
 
@@ -9,7 +10,14 @@ namespace SlashThemTheGame
         public Hero(Hp[] amountOfHp)
         {
             _hp = amountOfHp;
+
+            _hpCount = (byte)amountOfHp.Length;
         }
+
+        private byte _hpCount;
+        public byte HpCount { get { return _hpCount; } }
+
+        public Texture2D Avatar { get; set; }
 
         private Hp[] _hp;
 

@@ -5,6 +5,9 @@ namespace SlashThemTheGame
 {
     public class Map
     {
+        public Texture2D BackBushes { get; set; }
+        public Rectangle BackBushesPosition { get; set; }
+
         public Texture2D Background { get; set; }
         public Rectangle BackgroundPosition { get; set; }
 

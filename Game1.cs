@@ -12,10 +12,9 @@ namespace SlashThemTheGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private static  Hp[] heroHp = { new Hp(new Vector2(50, 60)), new Hp(new Vector2(120, 60)), new Hp(new Vector2(190, 60)) };
-        private Hero hero = new Hero(heroHp);
-
-        private Map map = new Map();
+        private Hero hero;
+        private Map map;
+        private static Hp[] heroHp;
 
         public Game1()
         {
@@ -33,11 +32,21 @@ namespace SlashThemTheGame
         {
             // TODO: Add your initialization logic here
 
+            heroHp = new Hp[]
+            {
+                new Hp(new Vector2(320, 165)), 
+                new Hp(new Vector2(385, 165)), 
+                new Hp(new Vector2(450, 165))
+            };
+
+            hero = new Hero(heroHp);
             hero.HeroPosition = new Vector2(600, 830);
 
+            map = new Map();
             map.BackgroundPosition = new Rectangle(0, 0, 1920, 1080);
             map.GroundPosition = new Rectangle(0, 0, 1920, 1080);
             map.ForestPosition = new Rectangle(0, 0, 1920, 1080);
+            map.BackBushesPosition = new Rectangle(0, 0, 1920, 1080);
 
             base.Initialize();
         }
@@ -48,12 +57,9 @@ namespace SlashThemTheGame
 
             // TODO: use this.Content to load your game content here
 
+            hero.Avatar = Content.Load<Texture2D>("avatar");
             hero.HeroSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hero.sf", new JsonContentLoader()));
             hero.HeroSprite.Play("idler");
-
-            /**heroHp[0].HpSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));
-            heroHp[1].HpSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));
-            heroHp[2].HpSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));**/
 
             for (int i = 0; i < heroHp.Length; i++)
             {
@@ -64,6 +70,9 @@ namespace SlashThemTheGame
             map.Background = Content.Load<Texture2D>("8Sky");
             map.Ground = Content.Load<Texture2D>("1Tiles");
             map.Forest = Content.Load<Texture2D>("Forest");
+            map.BackBushes = Content.Load<Texture2D>("BackBushes");
+
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -92,6 +101,7 @@ namespace SlashThemTheGame
             //Отрисовка карты
             _spriteBatch.Draw(map.Background, map.BackgroundPosition, Color.White);
             _spriteBatch.Draw(map.Forest, map.ForestPosition, Color.White);
+            _spriteBatch.Draw(map.BackBushes, map.BackBushesPosition, Color.White);
             _spriteBatch.Draw(map.Ground, map.GroundPosition, Color.White);
 
             for (int i = 0; i < heroHp.Length; i++)
@@ -101,6 +111,7 @@ namespace SlashThemTheGame
 
             //Отрисовка спрайта игрока
             _spriteBatch.Draw(hero.HeroSprite, hero.HeroPosition);
+            _spriteBatch.Draw(hero.Avatar, new Vector2(0, 0), Color.White);
 
             _spriteBatch.End();
 
