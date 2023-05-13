@@ -5,17 +5,20 @@ using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 
-namespace SlashThemTheGame
+namespace SlashItTheGame
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Hero hero;
-        private Enemy enemy;
         private Map map;
-        private static Hp[] heroHp;
+
+        private Hero hero;
+        private Hp[] heroHp;
+
+        private Enemy enemy;
+        private Hp[] enemyHp;
 
         public Game1()
         {
@@ -41,7 +44,7 @@ namespace SlashThemTheGame
             };
 
             hero = new Hero(heroHp);
-            hero.HeroPosition = new Vector2(600, 830);
+            hero.HeroPosition = new Vector2(600, 828);
 
             enemy = new Enemy();
             enemy.EnemyPosition = new Vector2(1000, 830);
@@ -86,13 +89,10 @@ namespace SlashThemTheGame
                 Exit();
 
             hero.ToControl(gameTime);
+            hero.ChangeHpStatus(gameTime, heroHp);
 
             enemy.Roam(gameTime);
-
-            for (int i = 0; i < heroHp.Length; i++)
-            {
-                heroHp[i].ChangeStatus(gameTime, hero);
-            }
+            enemy.ChangeHpStatus(gameTime, enemyHp);
 
             base.Update(gameTime);
         }

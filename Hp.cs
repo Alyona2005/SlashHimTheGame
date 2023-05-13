@@ -1,12 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Sprites;
 
-namespace SlashThemTheGame
+namespace SlashItTheGame
 {
+    interface IHp
+    {
+        public byte HpCount { get; }
+        public Hp[] Hp { get; set; }
+
+        void ChangeHpStatus(GameTime gameTime, Hp[] hp);
+    }
     public class Hp
     {
-        public Hp(Vector2 hpPosition) 
-        { 
+        public Hp(Vector2 hpPosition)
+        {
             _hpPosition = hpPosition;
         }
 
@@ -17,7 +24,7 @@ namespace SlashThemTheGame
         public AnimatedSprite HpSprite { get { return _hpSprite; } set { _hpSprite = value; } }
 
         //Логика состояния HP в зависимости от ситуации
-        public void ChangeStatus(GameTime gameTime, Hero hero)
+        public void Initialize(GameTime gameTime)
         {
             var animation = "idle";
             var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;

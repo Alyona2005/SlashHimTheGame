@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Sprites;
 
-namespace SlashThemTheGame
+namespace SlashItTheGame
 {
-    public class Hero
+    public class Hero : IHp
     {
         public Hero(Hp[] amountOfHp)
         {
@@ -20,8 +20,7 @@ namespace SlashThemTheGame
         public Texture2D Avatar { get; set; }
 
         private Hp[] _hp;
-
-        public Hp[] Hp { get { return _hp; } private set { _hp = value; } }
+        public Hp[] Hp { get { return _hp; } set { _hp = value; } }
 
         private Vector2 _heroPosition;
         public Vector2 HeroPosition { get { return _heroPosition; } set { _heroPosition = value; } }
@@ -121,7 +120,7 @@ namespace SlashThemTheGame
                 }
             }
 
-            if (_heroPosition.Y < 830 && keyboardState.IsKeyUp(Keys.W))
+            if (_heroPosition.Y < 828 && keyboardState.IsKeyUp(Keys.W))
             {
                 if (leftCheck == true)
                 {
@@ -187,6 +186,16 @@ namespace SlashThemTheGame
             _heroSprite.Play(animation);
 
             _heroSprite.Update(deltaSeconds);
+        }
+
+        public void ChangeHpStatus(GameTime gameTime, Hp[] hp)
+        {
+            for (int i = 0; i < Hp.Length; i++)
+            {
+                Hp[i].Initialize(gameTime);
+            }
+
+
         }
     }
 }
