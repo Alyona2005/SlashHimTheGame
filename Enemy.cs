@@ -5,7 +5,8 @@ namespace SlashThemTheGame
 {
     public class Enemy
     {
-        public Vector2 EnemyPosition { get; set; }
+        private Vector2 _enemyPosition;
+        public Vector2 EnemyPosition { get { return _enemyPosition; } set { _enemyPosition = value; } }
 
         private AnimatedSprite _enemySprite;
         public AnimatedSprite EnemySprite { get { return _enemySprite; } set { _enemySprite = value; } }

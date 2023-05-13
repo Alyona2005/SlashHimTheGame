@@ -22,9 +22,6 @@ namespace SlashThemTheGame
             var animation = "idle";
             var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-
-
-
             _hpSprite.Play(animation);
             _hpSprite.Update(deltaSeconds);
         }
