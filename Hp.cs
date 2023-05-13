@@ -12,6 +12,10 @@ namespace SlashItTheGame
     }
     public class Hp
     {
+        public Hp()
+        {
+
+        }
         public Hp(Vector2 hpPosition)
         {
             _hpPosition = hpPosition;
