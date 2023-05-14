@@ -8,7 +8,8 @@ namespace SlashItTheGame
         public byte HpCount { get; }
         public Hp[] Hp { get; set; }
 
-        void ChangeHpStatus(GameTime gameTime, Hp[] hp);
+        // У каждого объекта, реализующего данный интерфейс, своя логика изменения HP
+        void ChangeHpCondition(GameTime gameTime, Hp[] hp, object enemy);
     }
     public class Hp
     {
@@ -16,6 +17,7 @@ namespace SlashItTheGame
         {
 
         }
+
         public Hp(Vector2 hpPosition)
         {
             _hpPosition = hpPosition;
@@ -27,7 +29,7 @@ namespace SlashItTheGame
         private AnimatedSprite _hpSprite;
         public AnimatedSprite HpSprite { get { return _hpSprite; } set { _hpSprite = value; } }
 
-        //Логика состояния HP в зависимости от ситуации
+        // Инициализация HP
         public void Initialize(GameTime gameTime)
         {
             var animation = "idle";

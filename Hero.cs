@@ -10,7 +10,6 @@ namespace SlashItTheGame
         public Hero(Hp[] amountOfHp)
         {
             _hp = amountOfHp;
-
             _hpCount = (byte)amountOfHp.Length;
         }
 
@@ -31,7 +30,7 @@ namespace SlashItTheGame
         private bool leftCheck = false;
         private byte checkAction = 0;
 
-        //Логика управления игроком
+        // Логика управления игроком
         public void ToControl(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -188,14 +187,15 @@ namespace SlashItTheGame
             _heroSprite.Update(deltaSeconds);
         }
 
-        public void ChangeHpStatus(GameTime gameTime, Hp[] hp)
+        // Логика изменения HP игрока
+        public void ChangeHpCondition(GameTime gameTime, Hp[] hp, object enemy)
         {
             for (int i = 0; i < Hp.Length; i++)
             {
                 Hp[i].Initialize(gameTime);
+
+
             }
-
-
         }
     }
 }

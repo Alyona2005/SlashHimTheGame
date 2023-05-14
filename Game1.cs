@@ -34,8 +34,6 @@ namespace SlashItTheGame
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             heroHp = new Hp[]
             {
                 new Hp(new Vector2(320, 165)), 
@@ -43,10 +41,19 @@ namespace SlashItTheGame
                 new Hp(new Vector2(450, 165))
             };
 
+            enemyHp = new Hp[]
+            {
+                new Hp(),
+                new Hp(),
+                new Hp(),
+                new Hp(),
+                new Hp()
+            };
+
             hero = new Hero(heroHp);
             hero.HeroPosition = new Vector2(600, 828);
 
-            enemy = new Enemy();
+            enemy = new Enemy(enemyHp);
             enemy.EnemyPosition = new Vector2(1000, 830);
 
             map = new Map();
@@ -89,23 +96,24 @@ namespace SlashItTheGame
                 Exit();
 
             hero.ToControl(gameTime);
-            hero.ChangeHpStatus(gameTime, heroHp);
+            hero.ChangeHpCondition(gameTime, heroHp, enemy);
 
             enemy.Roam(gameTime);
-            enemy.ChangeHpStatus(gameTime, enemyHp);
+            enemy.ChangeHpCondition(gameTime, enemyHp, hero);
 
             base.Update(gameTime);
         }
 
+        // Отрисовка кадра
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.SkyBlue);
 
-            // TODO: Add your drawing code here
+            
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            //Отрисовка карты
+            // Отрисовка карты
             _spriteBatch.Draw(map.Background, map.BackgroundPosition, Color.White);
             _spriteBatch.Draw(map.Forest, map.ForestPosition, Color.White);
             _spriteBatch.Draw(map.BackBushes, map.BackBushesPosition, Color.White);
@@ -116,13 +124,13 @@ namespace SlashItTheGame
                 _spriteBatch.Draw(heroHp[i].HpSprite, heroHp[i].HpPosition);
             }
 
-            //Отрисовка врага
+            // Отрисовка врага
             _spriteBatch.Draw(enemy.EnemySprite, enemy.EnemyPosition);
 
-            //Отрисовка спрайта игрока
+            // Отрисовка спрайта игрока
             _spriteBatch.Draw(hero.HeroSprite, hero.HeroPosition);
 
-            //Отрисовка аватара персонажа
+            // Отрисовка аватара персонажа
             _spriteBatch.Draw(hero.Avatar, new Vector2(0, 0), Color.White);
 
             _spriteBatch.End();
