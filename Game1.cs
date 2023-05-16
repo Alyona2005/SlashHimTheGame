@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SlashItTheGame
 {
@@ -15,10 +17,10 @@ namespace SlashItTheGame
         private Map map;
 
         private Hero hero;
-        private Hp[] heroHp;
+        private List<Hp> heroHp;
 
         private Enemy enemy;
-        private Hp[] enemyHp;
+        private List<Hp> enemyHp;
 
         public Game1()
         {
@@ -34,14 +36,15 @@ namespace SlashItTheGame
 
         protected override void Initialize()
         {
-            heroHp = new Hp[]
+
+            heroHp = new List<Hp>
             {
                 new Hp(new Vector2(320, 165)), 
                 new Hp(new Vector2(385, 165)), 
                 new Hp(new Vector2(450, 165))
             };
 
-            enemyHp = new Hp[]
+            enemyHp = new List<Hp>
             {
                 new Hp(),
                 new Hp(),
@@ -54,13 +57,15 @@ namespace SlashItTheGame
             hero.HeroPosition = new Vector2(600, 828);
 
             enemy = new Enemy(enemyHp);
-            enemy.EnemyPosition = new Vector2(1000, 830);
+            enemy.EnemyPosition = new Vector2(1500, 846);
 
             map = new Map();
             map.BackgroundPosition = new Rectangle(0, 0, 1920, 1080);
             map.GroundPosition = new Rectangle(0, 0, 1920, 1080);
             map.ForestPosition = new Rectangle(0, 0, 1920, 1080);
             map.BackBushesPosition = new Rectangle(0, 0, 1920, 1080);
+
+            
 
             base.Initialize();
         }
@@ -78,7 +83,7 @@ namespace SlashItTheGame
             enemy.EnemySprite = new AnimatedSprite(Content.Load<SpriteSheet>("enemy.sf", new JsonContentLoader()));
             enemy.EnemySprite.Play("idle");
 
-            for (int i = 0; i < heroHp.Length; i++)
+            for (int i = 0; i < heroHp.Count; i++)
             {
                 heroHp[i].HpSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));
                 heroHp[i].HpSprite.Play("idle");
@@ -92,13 +97,15 @@ namespace SlashItTheGame
 
         protected override void Update(GameTime gameTime)
         {
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            hero.ToControl(gameTime);
+            hero.Control(gameTime);
             hero.ChangeHpCondition(gameTime, heroHp, enemy);
 
-            enemy.Roam(gameTime);
+            enemy.Interact(gameTime, hero);
             enemy.ChangeHpCondition(gameTime, enemyHp, hero);
 
             base.Update(gameTime);
@@ -109,8 +116,6 @@ namespace SlashItTheGame
         {
             GraphicsDevice.Clear(Color.SkyBlue);
 
-            
-
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             // Отрисовка карты
@@ -119,7 +124,7 @@ namespace SlashItTheGame
             _spriteBatch.Draw(map.BackBushes, map.BackBushesPosition, Color.White);
             _spriteBatch.Draw(map.Ground, map.GroundPosition, Color.White);
 
-            for (int i = 0; i < heroHp.Length; i++)
+            for (int i = 0; i < heroHp.Count; i++)
             {
                 _spriteBatch.Draw(heroHp[i].HpSprite, heroHp[i].HpPosition);
             }

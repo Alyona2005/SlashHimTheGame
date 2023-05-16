@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Sprites;
+using System.Collections.Generic;
 
 namespace SlashItTheGame
 {
     interface IHp
     {
         public byte HpCount { get; }
-        public Hp[] Hp { get; set; }
+        public List<Hp> Hp { get; set; }
 
         // У каждого объекта, реализующего данный интерфейс, своя логика изменения HP
-        void ChangeHpCondition(GameTime gameTime, Hp[] hp, object enemy);
+        void ChangeHpCondition(GameTime gameTime, List<Hp> hp, object enemy);
     }
     public class Hp
     {
@@ -30,13 +31,21 @@ namespace SlashItTheGame
         public AnimatedSprite HpSprite { get { return _hpSprite; } set { _hpSprite = value; } }
 
         // Инициализация HP
-        public void Initialize(GameTime gameTime)
+        public void Initialize(GameTime gameTime, bool check)
         {
-            var animation = "idle";
             var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _hpSprite.Play(animation);
-            _hpSprite.Update(deltaSeconds);
+            if (check)
+            {
+                _hpSprite.Play("remove");
+                _hpSprite.Update(deltaSeconds);
+            }
+
+            else
+            {
+                _hpSprite.Play("idle");
+                _hpSprite.Update(deltaSeconds);
+            }
         }
     }
 }

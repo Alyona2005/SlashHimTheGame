@@ -2,24 +2,25 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Sprites;
+using System.Collections.Generic;
 
 namespace SlashItTheGame
 {
     public class Hero : IHp
     {
-        public Hero(Hp[] amountOfHp)
+        public Hero(List<Hp> amountOfHp)
         {
             _hp = amountOfHp;
-            _hpCount = (byte)amountOfHp.Length;
+            _hpCount = (byte)amountOfHp.Count;
         }
 
         private byte _hpCount;
-        public byte HpCount { get { return _hpCount; } }
+        public byte HpCount { get { return _hpCount; } set { _hpCount = value; } }
 
         public Texture2D Avatar { get; set; }
 
-        private Hp[] _hp;
-        public Hp[] Hp { get { return _hp; } set { _hp = value; } }
+        private List<Hp> _hp;
+        public List<Hp> Hp { get { return _hp; } set { _hp = value; } }
 
         private Vector2 _heroPosition;
         public Vector2 HeroPosition { get { return _heroPosition; } set { _heroPosition = value; } }
@@ -27,12 +28,18 @@ namespace SlashItTheGame
         private AnimatedSprite _heroSprite;
         public AnimatedSprite HeroSprite { get { return _heroSprite; } set { _heroSprite = value; } }
 
+        public string CurrentAnimation { get; private set; }
+
         private bool leftCheck = false;
         private byte checkAction = 0;
+        private bool checkDamage = false;
+        private byte index = 2;
 
         // Логика управления игроком
-        public void ToControl(GameTime gameTime)
+        public void Control(GameTime gameTime)
         {
+            CurrentAnimation = "idler";
+
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -41,11 +48,9 @@ namespace SlashItTheGame
             var keyboardState = Keyboard.GetState();
             var mouseState = Mouse.GetState();
 
-            var animation = "idler";
-
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                animation = "runl";
+                CurrentAnimation = "runl";
                 _heroPosition.X -= walkSpeed;
 
                 leftCheck = true;
@@ -54,7 +59,7 @@ namespace SlashItTheGame
 
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                animation = "runr";
+                CurrentAnimation = "runr";
                 _heroPosition.X += walkSpeed;
 
                 leftCheck = false;
@@ -62,7 +67,7 @@ namespace SlashItTheGame
 
             if (keyboardState.IsKeyDown(Keys.A) && keyboardState.IsKeyDown(Keys.W))
             {
-                animation = "jumpl";
+                CurrentAnimation = "jumpl";
                 _heroPosition.X -= walkSpeed;
 
                 leftCheck = true;
@@ -72,7 +77,7 @@ namespace SlashItTheGame
 
             if (keyboardState.IsKeyDown(Keys.D) && keyboardState.IsKeyDown(Keys.W))
             {
-                animation = "jumpr";
+                CurrentAnimation = "jumpr";
                 _heroPosition.X += walkSpeed;
 
                 leftCheck = false;
@@ -80,19 +85,24 @@ namespace SlashItTheGame
 
             if (mouseState.LeftButton == ButtonState.Pressed && leftCheck == false)
             {
-                animation = "attackr";
+                CurrentAnimation = "attackr";
 
                 leftCheck = false;
             }
 
-            if (mouseState.LeftButton == ButtonState.Pressed && leftCheck == true)
+            if (mouseState.LeftButton == ButtonState.Pressed && keyboardState.IsKeyDown(Keys.D))
+            {
+                CurrentAnimation = "runr";
+            }
+
+            /**if (mouseState.LeftButton == ButtonState.Pressed && leftCheck == true)
             {
                 animation = "attackl";
 
                 leftCheck = true;
 
                 checkAction = 3;
-            }
+            }**/
 
             if (_heroPosition.Y > 600)
             {
@@ -100,7 +110,7 @@ namespace SlashItTheGame
                 {
                     if (leftCheck == true)
                     {
-                        animation = "jumpl";
+                        CurrentAnimation = "jumpl";
 
                         _heroPosition.Y -= 1000 * dt;
 
@@ -111,7 +121,7 @@ namespace SlashItTheGame
 
                     else
                     {
-                        animation = "jumpr";
+                        CurrentAnimation = "jumpr";
                         _heroPosition.Y -= 1000 * dt;
 
                         leftCheck = false;
@@ -123,7 +133,7 @@ namespace SlashItTheGame
             {
                 if (leftCheck == true)
                 {
-                    animation = "falll";
+                    CurrentAnimation = "falll";
                     _heroPosition.Y += 860 * dt;
 
                     checkAction = 4;
@@ -131,7 +141,7 @@ namespace SlashItTheGame
 
                 else
                 {
-                    animation = "fallr";
+                    CurrentAnimation = "fallr";
                     _heroPosition.Y += 860 * dt;
                 }
             }
@@ -142,60 +152,85 @@ namespace SlashItTheGame
                 {
                     case 0:
 
-                        animation = "idlel";
+                        CurrentAnimation = "idlel";
                         break;
 
                     case 1:
 
-                        animation = "jumpl";
+                        CurrentAnimation = "jumpl";
                         checkAction = 0;
 
                         break;
 
                     case 2:
 
-                        animation = "runl";
+                        CurrentAnimation = "runl";
                         checkAction = 0;
 
                         break;
 
-                    case 3:
+                   /** case 3:
 
                         animation = "attackl";
                         checkAction = 0;
 
-                        break;
+                        break;**/
 
                     case 4:
 
-                        animation = "falll";
+                        CurrentAnimation = "falll";
                         checkAction = 0;
 
                         break;
 
                     case 5:
 
-                        animation = "jumpl";
+                        CurrentAnimation = "jumpl";
                         checkAction = 0;
 
                         break;
                 }
             }
 
-            _heroSprite.Play(animation);
-
+            _heroSprite.Play(CurrentAnimation);
             _heroSprite.Update(deltaSeconds);
         }
 
         // Логика изменения HP игрока
-        public void ChangeHpCondition(GameTime gameTime, Hp[] hp, object enemy)
+        public void ChangeHpCondition(GameTime gameTime, List<Hp> hp, object enemy)
         {
-            for (int i = 0; i < Hp.Length; i++)
+            Enemy e = (Enemy)enemy;
+
+            if (HeroPosition.X - e.EnemyPosition.X < 40 && HeroPosition.X - e.EnemyPosition.X > -100 && HeroPosition.Y > 800 && e.CurrentAnimation == "attack")
             {
-                Hp[i].Initialize(gameTime);
+                checkDamage = true;
 
+                if (sw.ElapsedMilliseconds%700 == 0)
+                {
+                    for (int i = index; i < hp.Count;)
+                    {
+                        hp[index].Initialize(gameTime, checkDamage);
 
+                        hp.Remove(hp[index]);
+
+                        break;
+                    }
+
+                    _hpCount--;
+
+                    index--;
+                }              
             }
+
+            else
+            {
+                for (int i = 0; i < hp.Count; i++)
+                {
+                    hp[i].Initialize(gameTime, checkDamage);
+                }
+            }
+
+            checkDamage = false;
         }
     }
 }

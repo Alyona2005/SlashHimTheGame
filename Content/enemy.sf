@@ -13,7 +13,7 @@
     "attack": {
       "frames": [11,12,13,14,15,16,17,18,19],
       "isLooping": false,
-      "frameDuration": 0.1
+      "frameDuration": 0.07
     },
     "damage": {
       "frames": [22,23,24],
