@@ -5,7 +5,6 @@ using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SlashItTheGame
 {
@@ -16,18 +15,20 @@ namespace SlashItTheGame
 
         private Map map;
 
-        private Hero hero;
-        private List<Hp> heroHp;
+        private FirstPlayer firstPlayer;
+        private List<Hp> firstPlayerHp;
 
-        private Enemy enemy;
-        private List<Hp> enemyHp;
+        private SecondPlayer secondPlayer;
+        private List<Hp> secondPlayerHp;
 
+        private Texture2D redWon;
+        private Texture2D blueWon;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
-            //_graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = true;
 
 
             Content.RootDirectory = "Content";
@@ -37,35 +38,31 @@ namespace SlashItTheGame
         protected override void Initialize()
         {
 
-            heroHp = new List<Hp>
+            firstPlayerHp = new List<Hp>
             {
                 new Hp(new Vector2(320, 165)), 
                 new Hp(new Vector2(385, 165)), 
                 new Hp(new Vector2(450, 165))
             };
 
-            enemyHp = new List<Hp>
+            secondPlayerHp = new List<Hp>
             {
-                new Hp(),
-                new Hp(),
-                new Hp(),
-                new Hp(),
-                new Hp()
+                new Hp(new Vector2(1600, 165)),
+                new Hp(new Vector2(1535, 165)),
+                new Hp(new Vector2(1470, 165)),
             };
 
-            hero = new Hero(heroHp);
-            hero.HeroPosition = new Vector2(600, 828);
+            firstPlayer = new FirstPlayer(firstPlayerHp);
+            firstPlayer.Position = new Vector2(600, 828);
 
-            enemy = new Enemy(enemyHp);
-            enemy.EnemyPosition = new Vector2(1500, 846);
+            secondPlayer = new SecondPlayer(secondPlayerHp);
+            secondPlayer.Position = new Vector2(1000, 828);
 
             map = new Map();
             map.BackgroundPosition = new Rectangle(0, 0, 1920, 1080);
             map.GroundPosition = new Rectangle(0, 0, 1920, 1080);
             map.ForestPosition = new Rectangle(0, 0, 1920, 1080);
             map.BackBushesPosition = new Rectangle(0, 0, 1920, 1080);
-
-            
 
             base.Initialize();
         }
@@ -76,37 +73,45 @@ namespace SlashItTheGame
 
             // TODO: use this.Content to load your game content here
 
-            hero.Avatar = Content.Load<Texture2D>("avatar");
-            hero.HeroSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hero.sf", new JsonContentLoader()));
-            hero.HeroSprite.Play("idler");
+            firstPlayer.Avatar = Content.Load<Texture2D>("avatar");
+            firstPlayer.Sprite = new AnimatedSprite(Content.Load<SpriteSheet>("player1.sf", new JsonContentLoader()));
+            firstPlayer.Sprite.Play("idler");
 
-            enemy.EnemySprite = new AnimatedSprite(Content.Load<SpriteSheet>("enemy.sf", new JsonContentLoader()));
-            enemy.EnemySprite.Play("idle");
+            secondPlayer.Avatar = Content.Load<Texture2D>("avatar2");
+            secondPlayer.Sprite = new AnimatedSprite(Content.Load<SpriteSheet>("player2.sf", new JsonContentLoader()));
+            secondPlayer.Sprite.Play("idlel");
 
-            for (int i = 0; i < heroHp.Count; i++)
+            for (int i = 0; i < firstPlayerHp.Count; i++)
             {
-                heroHp[i].HpSprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));
-                heroHp[i].HpSprite.Play("idle");
+                firstPlayerHp[i].Sprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));
+                firstPlayerHp[i].Sprite.Play("idle");
+            }
+
+            for (int i = 0; i < secondPlayerHp.Count; i++)
+            {
+                secondPlayerHp[i].Sprite = new AnimatedSprite(Content.Load<SpriteSheet>("hp.sf", new JsonContentLoader()));
+                secondPlayerHp[i].Sprite.Play("idle");
             }
 
             map.Background = Content.Load<Texture2D>("8Sky");
             map.Ground = Content.Load<Texture2D>("1Tiles");
             map.Forest = Content.Load<Texture2D>("Forest");
             map.BackBushes = Content.Load<Texture2D>("BackBushes");
+
+            redWon = Content.Load<Texture2D>("redWon");
+            blueWon = Content.Load<Texture2D>("blueWon");
         }
 
         protected override void Update(GameTime gameTime)
         {
-
-
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            hero.Control(gameTime);
-            hero.ChangeHpCondition(gameTime, heroHp, enemy);
+            firstPlayer.Control(gameTime);
+            firstPlayer.ChangeHpCondition(gameTime, firstPlayerHp, secondPlayer);
 
-            enemy.Interact(gameTime, hero);
-            enemy.ChangeHpCondition(gameTime, enemyHp, hero);
+            secondPlayer.Control(gameTime);
+            secondPlayer.ChangeHpCondition(gameTime, secondPlayerHp, firstPlayer);
 
             base.Update(gameTime);
         }
@@ -124,19 +129,36 @@ namespace SlashItTheGame
             _spriteBatch.Draw(map.BackBushes, map.BackBushesPosition, Color.White);
             _spriteBatch.Draw(map.Ground, map.GroundPosition, Color.White);
 
-            for (int i = 0; i < heroHp.Count; i++)
+            //отрисовка HP игроков
+            for (int i = 0; i < firstPlayerHp.Count; i++)
             {
-                _spriteBatch.Draw(heroHp[i].HpSprite, heroHp[i].HpPosition);
+                _spriteBatch.Draw(firstPlayerHp[i].Sprite, firstPlayerHp[i].Position);
+                firstPlayerHp[i].Initialize(gameTime);
             }
 
-            // Отрисовка врага
-            _spriteBatch.Draw(enemy.EnemySprite, enemy.EnemyPosition);
+            for (int i = 0; i < secondPlayerHp.Count; i++)
+            {
+                _spriteBatch.Draw(secondPlayerHp[i].Sprite, secondPlayerHp[i].Position);
+                secondPlayerHp[i].Initialize(gameTime);
+            }
 
-            // Отрисовка спрайта игрока
-            _spriteBatch.Draw(hero.HeroSprite, hero.HeroPosition);
+            // Отрисовка спрайтов игроков
+            _spriteBatch.Draw(firstPlayer.Sprite, firstPlayer.Position);
+            _spriteBatch.Draw(secondPlayer.Sprite, secondPlayer.Position);
 
-            // Отрисовка аватара персонажа
-            _spriteBatch.Draw(hero.Avatar, new Vector2(0, 0), Color.White);
+            // Отрисовка аватаров игроков
+            _spriteBatch.Draw(firstPlayer.Avatar, new Vector2(0, 0), Color.White);
+            _spriteBatch.Draw(secondPlayer.Avatar, new Vector2(1600, 0), Color.White);
+
+            if (firstPlayerHp.Count == 0)
+            {
+                _spriteBatch.Draw(blueWon, new Rectangle(0,0, 1920, 1080), Color.White);
+            }
+
+            if (secondPlayerHp.Count == 0)
+            {
+                _spriteBatch.Draw(redWon, new Rectangle(0, 0, 1920, 1080), Color.White);
+            }
 
             _spriteBatch.End();
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SlashItTheGame
 {
-    public class Hero : IHp
+    class Hero : IHp
     {
         public Hero(List<Hp> amountOfHp)
         {
@@ -192,6 +192,25 @@ namespace SlashItTheGame
                 }
             }
 
+            if (_heroPosition.X < 115 && keyboardState.IsKeyUp(Keys.D)) 
+            {
+                CurrentAnimation = "idlel";
+
+                _heroPosition.X = 100;
+            }
+
+            if (_heroPosition.X > 1420 && keyboardState.IsKeyUp(Keys.A))
+            {
+                CurrentAnimation = "idler";
+
+                _heroPosition.X = 1420;
+            }
+
+            if (keyboardState.IsKeyDown(Keys.D) && keyboardState.IsKeyDown(Keys.A))
+            {
+                CurrentAnimation = "idler";
+            }
+
             _heroSprite.Play(CurrentAnimation);
             _heroSprite.Update(deltaSeconds);
         }
@@ -199,27 +218,24 @@ namespace SlashItTheGame
         // Логика изменения HP игрока
         public void ChangeHpCondition(GameTime gameTime, List<Hp> hp, object enemy)
         {
-            Enemy e = (Enemy)enemy;
+            /**Enemy e = (Enemy)enemy;
 
             if (HeroPosition.X - e.EnemyPosition.X < 40 && HeroPosition.X - e.EnemyPosition.X > -100 && HeroPosition.Y > 800 && e.CurrentAnimation == "attack")
             {
                 checkDamage = true;
 
-                if (sw.ElapsedMilliseconds%700 == 0)
+                for (int i = index; i < hp.Count;)
                 {
-                    for (int i = index; i < hp.Count;)
-                    {
-                        hp[index].Initialize(gameTime, checkDamage);
+                    hp[index].Initialize(gameTime, checkDamage);
 
-                        hp.Remove(hp[index]);
+                    hp.Remove(hp[index]);
 
-                        break;
-                    }
+                    break;
+                }
 
-                    _hpCount--;
+                _hpCount--;
 
-                    index--;
-                }              
+                index--;
             }
 
             else
@@ -230,7 +246,7 @@ namespace SlashItTheGame
                 }
             }
 
-            checkDamage = false;
+            checkDamage = false;**/
         }
     }
 }
