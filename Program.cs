@@ -1,3 +1,2 @@
-﻿
-using var game = new SlashThemTheGame.Game1();
+﻿using var game = new SlashItTheGame.Game1();
 game.Run();
