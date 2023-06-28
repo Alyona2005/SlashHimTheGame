@@ -2,7 +2,7 @@
 using MonoGame.Extended.Sprites;
 using System.Collections.Generic;
 
-namespace SlashItTheGame
+namespace SlashHimTheGame
 {
     interface IHp
     {

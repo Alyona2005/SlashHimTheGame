@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 
-namespace SlashItTheGame
+namespace SlashHiTheGamme
 {
     class SecondPlayer : Character, IHp, IManaged
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Sprites;
 
-namespace SlashItTheGame
+namespace SlashHimTheGame
 {
     interface IManaged
     {

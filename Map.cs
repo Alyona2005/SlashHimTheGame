@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SlashItTheGame
+namespace SlashHimTheGame
 {
     public class Map
     {

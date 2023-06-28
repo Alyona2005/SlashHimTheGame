@@ -6,7 +6,7 @@ using MonoGame.Extended.Content;
 using MonoGame.Extended.Serialization;
 using System.Collections.Generic;
 
-namespace SlashItTheGame
+namespace SlashHimTheGame
 {
     public class Game1 : Game
     {
